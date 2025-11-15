@@ -1,8 +1,9 @@
-opencv-python
+opencv-python-headless
 Flask
 Flask-SQLAlchemy
 werkzeug
 tensorflow
+
 
 
 
