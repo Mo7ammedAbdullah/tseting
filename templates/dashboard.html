@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #d8c2cbff;
+            background-image: url('https://images.unsplash.com/photo-1579684385153-61a7a00ac82a?q=80&w=1935&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .card {
+            background-color: #d8bfd4ff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        .input-field {
+            display: block;
+            width: 100%;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            color: #1f2937;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #47677aff;
+            box-shadow: 0 0 0 4px rgba(206, 157, 202, 0.3);
+        }
+        .btn-primary {
+            background-color: #c77fb8ff;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 1rem 2.5rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:hover {
+            background-color: #7b435cff;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="p-10 flex flex-col items-center">
+    <div class="absolute inset-0 bg-gray-900 opacity-70"></div>
+
+    <div class="relative w-full mx-auto space-y-12">
+        <header class="flex flex-col sm:flex-row justify-between items-center pb-8 border-b-2 border-gray-200">
+            <h1 class="text-4xl font-extrabold text-white mb-4 sm:mb-0">
+                لوحة تحكم <span class="text-indigo-600"> رؤيه طبيه </span>
+            </h1>
+            <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 sm:space-x-reverse">
+                <span class="text-lg font-medium text-gray-200">أهلاً بك، {{ session['username'] }}</span>
+                <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-red-500 text-white rounded-lg font-bold hover:bg-red-600 transition-colors">
+                    <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
+                </a>
+            </div>
+        </header>
+
+        <div class="card w-full">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">تشخيص جديد</h2>
+            <form action="{{ url_for('dashboard') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2" for="patient_name">اسم المريض</label>
+                    <input class="input-field" type="text" id="patient_name" name="patient_name" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2" for="patient_gender">جنس المريض</label>
+                    <select class="input-field" id="patient_gender" name="patient_gender" required>
+                        <option value="">اختر الجنس</option>
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2" for="patient_age">عمر المريض</label>
+                    <input class="input-field" type="number" id="patient_age" name="patient_age" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2" for="scan_type">نوع الأشعة</label>
+                    <select class="input-field" id="scan_type" name="scan_type" required>
+                        <option value="">اختر نوع الفحص</option>
+                        <option value="brain_tumor">ورم الدماغ</option>
+                        <option value="skin_cancer">سرطان الجلد</option>
+                        <option value="eye_disease">أمراض العيون</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2" for="diagnosis_date">تاريخ التشخيص</label>
+                    <input class="input-field" type="date" id="diagnosis_date" name="diagnosis_date" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2" for="notes">ملاحظات</label>
+                    <textarea class="input-field" id="notes" name="notes" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2" for="file">تحميل الصورة</label>
+                    <input class="input-field" type="file" id="file" name="file" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn-primary w-full mt-6">
+                    <i class="fas fa-search-plus ml-2"></i> تشخيص
+                </button>
+            </form>
+            {% if diagnosis_result %}
+            <div class="mt-8 p-6 rounded-xl bg-indigo-100 text-indigo-800 font-bold text-center border border-indigo-300">
+                {{ diagnosis_result }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="w-full flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1579684385153-61a7a00ac82a?q=80&w=1935&auto=format&fit=crop" alt="Medical Diagnosis" class="w-full h-full object-cover rounded-xl shadow-lg">
+        </div>
+
+        <div class="mt-12 bg-white p-8 rounded-xl shadow-lg">
+            <div class="flex flex-col md:flex-row justify-between items-center pb-4 border-b">
+                <h2 class="text-3xl font-bold text-gray-800">سجلات المرضى</h2>
+            </div>
+            
+            <form id="search-form" method="POST" action="{{ url_for('dashboard') }}" class="flex flex-col md:flex-row gap-4 mb-4 mt-6">
+                <input type="text" name="search_patient_name" placeholder="البحث باسم المريض..." class="flex-grow px-4 py-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700">
+                <button type="submit" class="bg-gray-800 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 transition duration-300">
+                    <i class="fas fa-search ml-2"></i> بحث
+                </button>
+            </form>
+
+            <div class="overflow-x-auto rounded-xl border border-gray-200">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
+                        <tr>
+                            <th class="py-3 px-6 text-center tracking-wider">الاسم</th>
+                            <th class="py-3 px-6 text-center tracking-wider">العمر</th>
+                            <th class="py-3 px-6 text-center tracking-wider">الجنس</th>
+                            <th class="py-3 px-6 text-center tracking-wider">نوع التشخيص</th>
+                            <th class="py-3 px-6 text-center tracking-wider">النتيجة</th>
+                            <th class="py-3 px-6 text-center tracking-wider">الثقة</th>
+                            <th class="py-3 px-6 text-center tracking-wider">التاريخ</th>
+                            <th class="py-3 px-6 text-center tracking-wider">الملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records-table-body" class="divide-y divide-gray-200">
+                        {% for record in records %}
+                        <tr>
+                            <td class="py-4 px-6 text-center">{{ record.patient_name }}</td>
+                            <td class="py-4 px-6 text-center">{{ record.patient_age }}</td>
+                            <td class="py-4 px-6 text-center">{{ record.patient_gender }}</td>
+                            <td class="py-4 px-6 text-center">{{ record.diagnosis_type }}</td>
+                            <td class="py-4 px-6 text-center">{{ record.diagnosis_result }}</td>
+                            <td class="py-4 px-6 text-center">{{ "%.2f"|format(record.confidence) }}%</td>
+                            <td class="py-4 px-6 text-center">{{ record.diagnosis_date }}</td>
+                            <td class="py-4 px-6 text-center max-w-xs overflow-auto text-sm">{{ record.notes or 'لا توجد' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if not records %}
+            <div class="mt-6 text-center text-gray-500 p-6 bg-gray-50 rounded-xl">
+                لا توجد سجلات لعرضها.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

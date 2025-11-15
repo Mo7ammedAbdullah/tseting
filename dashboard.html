@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رؤية طبية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://placehold.co/1920x1080/0f172a/fff?text=Medical+Diagnosis');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+        }
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #1f2937;
+        }
+        input, select {
+            color: #4b5563;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <nav class="bg-indigo-700 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/dashboard" class="text-2xl font-bold">رؤية طبية</a>
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <span class="font-medium">أهلاً بك، {{ session['username'] }}</span>
+                <a href="/logout" class="py-1 px-3 bg-red-500 hover:bg-red-600 rounded-md transition-colors">تسجيل الخروج</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6 lg:p-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 p-6 rounded-xl glass-card">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">تشخيص جديد</h2>
+            <form action="/dashboard" method="post" enctype="multipart/form-data" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="patient_name" class="block text-sm font-medium text-gray-700">اسم المريض</label>
+                        <input type="text" id="patient_name" name="patient_name" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="patient_age" class="block text-sm font-medium text-gray-700">عمر المريض</label>
+                        <input type="number" id="patient_age" name="patient_age" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label for="patient_gender" class="block text-sm font-medium text-gray-700">الجنس</label>
+                    <select id="patient_gender" name="patient_gender" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="">اختر الجنس</option>
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="scan_type" class="block text-sm font-medium text-gray-700">نوع الفحص</label>
+                    <select id="scan_type" name="scan_type" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="">اختر نوع الفحص</option>
+                        <option value="brain_tumor">ورم الدماغ</option>
+                        <option value="skin_cancer">سرطان الجلد</option>
+                        <option value="eye_disease">أمراض العيون</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="file" class="block text-sm font-medium text-gray-700">تحميل الصورة</label>
+                    <input type="file" id="file" name="file" required
+                           class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                </div>
+                <button type="submit"
+                        class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                    تشخيص
+                </button>
+            </form>
+
+            {% if diagnosis_result %}
+            <div class="mt-6 p-4 bg-indigo-100 border-l-4 border-indigo-500 rounded-lg text-indigo-800">
+                <p class="text-sm font-medium">{{ diagnosis_result }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="lg:col-span-1 p-6 rounded-xl glass-card">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">سجلات المرضى</h2>
+            
+            <form action="/dashboard" method="get" class="mb-4">
+                <label for="search_name" class="sr-only">البحث عن سجل</label>
+                <input type="text" id="search_name" name="search_name" placeholder="ابحث باسم المريض..."
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </form>
+            
+            <div class="space-y-4">
+                {% if search_results %}
+                    {% for record in search_results %}
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <p class="font-bold text-gray-800">{{ record[0] }} ({{ record[1] }} سنة - {{ record[2] }})</p>
+                            <p class="text-gray-600">نوع الفحص: {{ record[3] }}</p>
+                            <p class="text-gray-600">التشخيص: {{ record[4] }} ({{ "%.2f"|format(record[5]|float) }}%)</p>
+                            <p class="text-gray-400 text-sm mt-1">التاريخ: {{ record[6] }}</p>
+                        </div>
+                    {% endfor %}
+                {% elif all_records %}
+                    {% for record in all_records %}
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <p class="font-bold text-gray-800">{{ record[0] }} ({{ record[1] }} سنة - {{ record[2] }})</p>
+                            <p class="text-gray-600">نوع الفحص: {{ record[3] }}</p>
+                            <p class="text-gray-600">التشخيص: {{ record[4] }} ({{ "%.2f"|format(record[5]|float) }}%)</p>
+                            <p class="text-gray-400 text-sm mt-1">التاريخ: {{ record[6] }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-500 text-center">لا توجد سجلات بعد.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
