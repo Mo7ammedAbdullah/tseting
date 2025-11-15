@@ -1,6 +1,8 @@
+cv2
 Flask
 Flask-SQLAlchemy
 werkzeug
 tensorflow
+
 
 
