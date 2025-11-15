@@ -172,7 +172,8 @@ def dashboard():
 
 if __name__ == '__main__':
     db.init_db()
-    app.run(port=8514)
+    app.run(port=8515)
+
 
 
 
