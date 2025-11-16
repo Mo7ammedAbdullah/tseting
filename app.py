@@ -8,6 +8,13 @@ import cv2
 import database as db
 
 app = Flask(__name__)
+@app.after_request
+def allow_iframe(response):
+    # Remove X-Frame-Options if present
+    response.headers.pop('X-Frame-Options', None)
+    # Allow framing from Streamlit (example origin). Add other origins if needed.
+    response.headers['Content-Security-Policy'] = "frame-ancestors 'self' http://localhost:8518"
+    return response
 app.secret_key = 'your_secret_key'
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 
@@ -172,7 +179,7 @@ def dashboard():
 
 if __name__ == '__main__':
     db.init_db()
-    app.run(port=8513)
+    app.run(port=8518)
 
 
 
