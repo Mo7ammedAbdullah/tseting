@@ -13,7 +13,7 @@ def allow_iframe(response):
     # Remove X-Frame-Options if present
     response.headers.pop('X-Frame-Options', None)
     # Allow framing from Streamlit (example origin). Add other origins if needed.
-    response.headers['Content-Security-Policy'] = "frame-ancestors 'self' http://localhost:8519"
+    response.headers['Content-Security-Policy'] = "frame-ancestors 'self' http://localhost:8511"
     return response
 app.secret_key = 'your_secret_key'
 app.config['UPLOAD_FOLDER'] = 'uploads/'
@@ -179,7 +179,8 @@ def dashboard():
 
 if __name__ == '__main__':
     db.init_db()
-    app.run(host='0.0.0.0', port=8519, debug=False)
+    app.run(host='0.0.0.0', port=8511, debug=False)
+
 
 
 
